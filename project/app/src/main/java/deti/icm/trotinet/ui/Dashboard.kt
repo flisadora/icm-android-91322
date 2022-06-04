@@ -1,7 +1,8 @@
-package deti.icm.trotinet
+package deti.icm.trotinet.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import deti.icm.trotinet.R
 
 class Dashboard : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
