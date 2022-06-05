@@ -16,7 +16,7 @@
         android:theme="@style/Theme.TrotiNet"
         tools:targetApi="31">
         <activity
-            android:name=".ui.Dashboard"
+            android:name=".ui.UserDetails"
             android:exported="false" />
         <activity
             android:name=".ui.MainActivity"
