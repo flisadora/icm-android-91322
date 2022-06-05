@@ -1,4 +1,4 @@
-package deti.icm.trotinet
+package deti.icm.trotinet.ui
 
 import android.app.KeyguardManager
 import android.content.Context
@@ -10,10 +10,14 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CancellationSignal
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import deti.icm.trotinet.R
+import deti.icm.trotinet.database.AppDatabase
+import deti.icm.trotinet.model.User
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,7 +35,7 @@ class MainActivity : AppCompatActivity() {
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
                 notifyUser("Successful authentication!")
-                startActivity(Intent(this@MainActivity, Dashboard::class.java))
+                startActivity(Intent(this@MainActivity, UserDetails::class.java))
             }
         }
 
@@ -42,6 +46,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val db = AppDatabase.instance(this)
+        val appDao = db.appDao()
+        Log.d("ISADORA", "on create")
 
         checkBiometricSupport()
 
