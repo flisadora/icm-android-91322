@@ -24,6 +24,8 @@ interface AppDao {
     @Query("DELETE FROM User")
     fun deleteAllUsers()
 
+    @Update
+    fun updateUser(user: User)
 
     // ***** RIDE Database *****
     @Query("SELECT * FROM Ride")

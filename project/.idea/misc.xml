@@ -6,7 +6,8 @@
         <entry key="app/src/main/res/layout/activity_dashboard.xml" value="0.23854166666666668" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.1328125" />
-        <entry key="app/src/main/res/layout/activity_user_details.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_user_details.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/ride_item.xml" value="0.2515625" />
       </map>
     </option>
   </component>
