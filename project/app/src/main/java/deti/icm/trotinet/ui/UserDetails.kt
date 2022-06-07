@@ -10,6 +10,8 @@ import deti.icm.trotinet.database.AppDatabase
 import deti.icm.trotinet.model.Ride
 import deti.icm.trotinet.model.User
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class UserDetails : AppCompatActivity() {
 
@@ -27,7 +29,7 @@ class UserDetails : AppCompatActivity() {
         val user = users[0]
         //appDao.addRide(Ride(0L, users[0].uid,2800.0, 2.34,"Rua Dr. João de Moura 2, Aveiro", "Universidade de Aveiro, 3810-193 Aveiro", LocalDateTime.now()))
         //appDao.addRide(Ride(0L, users[0].uid,1700.0, 1.81,"Universidade de Aveiro, 3810-193 Aveiro", "Forum Aveiro, 3810-064 Aveiro", LocalDateTime.now()))
-        appDao.addRide(Ride(0L, users[0].uid,1100.0, 1.53,"Forum Aveiro, 3810-064 Aveiro", "Salinas de Aveiro, 3800-180 Aveiro", LocalDateTime.now()))
+        //appDao.addRide(Ride(0L, users[0].uid,1100.0, 1.53,"Forum Aveiro, 3810-064 Aveiro", "Salinas de Aveiro, 3800-180 Aveiro", LocalDateTime.now()))
         val rides = appDao.getAllRides()
         val userRides = appDao.loadUserRides(users[0].uid)
         //val userRides = appDao.getUserRides()
@@ -68,8 +70,8 @@ class UserDetails : AppCompatActivity() {
         val tv_date = findViewById<TextView>(R.id.user_details_ride_date)
         val tv_cost = findViewById<TextView>(R.id.user_details_ride_cost)
 
-        tv_route.text = rides[0].endRoute
-        tv_date.text = rides[0].date.toString()
+        tv_route.text = rides[1].endRoute
+        tv_date.text = rides[0].date?.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)).toString()
         tv_cost.text = rides[0].cost.toString() + " €"
 
     }
