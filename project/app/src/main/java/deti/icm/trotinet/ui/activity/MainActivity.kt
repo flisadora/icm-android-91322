@@ -1,4 +1,4 @@
-package deti.icm.trotinet.ui
+package deti.icm.trotinet.ui.activity
 
 import android.app.KeyguardManager
 import android.content.Context
@@ -17,7 +17,6 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import deti.icm.trotinet.R
 import deti.icm.trotinet.database.AppDatabase
-import deti.icm.trotinet.model.User
 
 class MainActivity : AppCompatActivity() {
 

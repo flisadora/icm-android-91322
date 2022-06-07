@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content "
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="6dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -20,10 +20,10 @@
             tools:ignore="MissingConstraints">
 
             <ImageView
-                android:id="@+id/user_details_ride_icon"
+                android:id="@+id/ride_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginHorizontal="12dp"
+                android:layout_marginRight="12dp"
                 app:srcCompat="@drawable/ic_round_electric_scooter_24"
                 android:outlineSpotShadowColor="@color/bluegray_light"
                 android:outlineAmbientShadowColor="@color/bluegray_light"
@@ -32,17 +32,17 @@
                 tools:ignore="MissingConstraints" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/user_details_card_vertical_items"
+                android:id="@+id/card_vertical_items"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_toStartOf="@id/user_details_ride_cost"
-                android:layout_toEndOf="@id/user_details_ride_icon"
+                android:layout_toStartOf="@id/ride_cost"
+                android:layout_toEndOf="@id/ride_icon"
                 android:orientation="vertical"
                 tools:ignore="MissingConstraints">
 
                 <TextView
-                    android:id="@+id/user_details_ride_route"
+                    android:id="@+id/ride_route"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
@@ -52,7 +52,7 @@
                     tools:ignore="MissingConstraints" />
 
                 <TextView
-                    android:id="@+id/user_details_ride_date"
+                    android:id="@+id/ride_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="secondary_text"
@@ -60,7 +60,7 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <TextView
-                android:id="@+id/user_details_ride_cost"
+                android:id="@+id/ride_cost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="12dp"

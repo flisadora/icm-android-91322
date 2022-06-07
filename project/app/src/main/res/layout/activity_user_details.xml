@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="18dp"
     android:layout_marginRight="18dp"
-    tools:context=".ui.UserDetails">
+    tools:context=".ui.activity.UserDetails">
 
     <TextView
         android:id="@+id/user_details_greetings"
@@ -104,20 +104,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/user_details_email" />
 
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleview"
+        android:id="@+id/recyclerView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         tools:listitem="@layout/ride_item"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/user_details_save"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:ignore="MissingConstraints">
     </androidx.recyclerview.widget.RecyclerView>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
