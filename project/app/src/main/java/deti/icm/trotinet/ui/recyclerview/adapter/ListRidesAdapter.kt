@@ -13,8 +13,10 @@ import java.time.format.FormatStyle
 
 class ListRidesAdapter(
     private val context: Context,
-    private val rides: List<Ride>
+    rides: List<Ride> = emptyList()
 ) :  RecyclerView.Adapter<ListRidesAdapter.ViewHolder>() {
+
+    private val rides = rides.toMutableList()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(ride: Ride) {
@@ -40,4 +42,10 @@ class ListRidesAdapter(
     }
 
     override fun getItemCount(): Int = rides.size
+
+    fun refresh(rides: List<Ride>) {
+        this.rides.clear()
+        this.rides.addAll(rides)
+        notifyDataSetChanged()
+    }
 }

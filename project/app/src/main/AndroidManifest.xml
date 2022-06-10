@@ -16,14 +16,14 @@
         android:theme="@style/Theme.TrotiNet"
         tools:targetApi="31">
         <activity
-            android:name=".ui.activity.MainActivity"
-            android:exported="true" />
+            android:name=".ui.activity.UserDetails" />
         <activity
-            android:name=".ui.activity.UserDetails"
+            android:name=".ui.activity.ListRides" />
+        <activity
+            android:name=".ui.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
