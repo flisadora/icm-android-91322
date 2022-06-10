@@ -13,6 +13,7 @@ data class Ride(
     val userId: Long,
     val distance: Double,
     val cost: Double,
-    val route: String,
+    val startRoute: String,
+    val endRoute: String,
     val date: LocalDateTime?,
 )

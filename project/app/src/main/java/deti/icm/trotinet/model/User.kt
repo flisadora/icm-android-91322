@@ -10,5 +10,4 @@ data class User (
     val name: String,
     val email: String,
     val balance: Double,
-    val distance: Double,
 )

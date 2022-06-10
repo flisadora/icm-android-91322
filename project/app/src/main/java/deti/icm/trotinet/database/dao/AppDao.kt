@@ -24,9 +24,11 @@ interface AppDao {
     @Query("DELETE FROM User")
     fun deleteAllUsers()
 
+    @Update
+    fun updateUser(user: User)
 
     // ***** RIDE Database *****
-    @Query("SELECT * FROM Ride")
+    @Query("SELECT * FROM Ride ORDER BY Ride.date DESC")
     fun getAllRides(): List<Ride>
 
     @Insert
@@ -41,7 +43,7 @@ interface AppDao {
     // Multimap Relationship
     @Query(
         "SELECT * FROM Ride JOIN User ON User.uid = Ride.userId " +
-        "WHERE User.uid LIKE :userId"
+        "WHERE User.uid LIKE :userId ORDER BY Ride.date DESC"
     )
     fun loadUserRides(userId: Long): List<Ride>
 
