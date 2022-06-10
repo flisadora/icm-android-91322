@@ -4,6 +4,11 @@
     package="deti.icm.trotinet">
 
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -19,6 +24,8 @@
             android:name=".ui.activity.UserDetails" />
         <activity
             android:name=".ui.activity.ListRides" />
+        <activity
+            android:name=".ui.activity.QrScanner" />
         <activity
             android:name=".ui.activity.MainActivity"
             android:exported="true">

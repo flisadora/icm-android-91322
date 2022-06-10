@@ -13,6 +13,7 @@
         <entry key="app/src/main/res/layout/activity_list_rides.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.1328125" />
+        <entry key="app/src/main/res/layout/activity_qr_scanner.xml" value="0.3890625" />
         <entry key="app/src/main/res/layout/activity_user_details.xml" value="0.25" />
         <entry key="app/src/main/res/layout/ride_item.xml" value="0.2515625" />
       </map>
