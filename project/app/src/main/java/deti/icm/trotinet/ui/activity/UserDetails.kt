@@ -12,7 +12,7 @@ import deti.icm.trotinet.webclient.model.ForecastCall
 import deti.icm.trotinet.model.User
 import deti.icm.trotinet.webclient.RetrofitInitializer
 import deti.icm.trotinet.webclient.model.ForecastResponse
-import org.json.JSONObject
+import deti.icm.trotinet.webclient.model.Geolocation
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -57,33 +57,49 @@ class UserDetails : AppCompatActivity(R.layout.activity_user_details) {
             appDao.updateUser(editedUser)
         }
 
-        getForecast()
+        getLocation()
+    }
+
+    fun getLocation() {
+       var city: String = ""
+       RetrofitInitializer().geolocationService.getGeodata("-19.9191", "-43.9387").enqueue(
+           object : Callback<Geolocation> {
+               override fun onFailure(call: Call<Geolocation>, t: Throwable) {
+                   Log.i("###ISADORA", "geolocation api call failure")
+               }
+
+               override fun onResponse(call: Call<Geolocation>, response: Response<Geolocation>) {
+                   val geolocation = response.body()
+                   city = geolocation?.city.toString()
+                   getForecast(city)
+               }
+
+           }
+       )
     }
 
 
-    fun getForecast() {
-        val forecastCallData = ForecastCall("Aveiro")
+    fun getForecast(city: String) {
+        val forecastCallData = ForecastCall(city)
         RetrofitInitializer().weatherService.getWeather(forecastCallData).enqueue(
             object : Callback<ForecastResponse> {
 
                 override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
-                    Log.i("###ISADORA", "api call failure")
+                    Log.i("###ISADORA", "weather api call failure")
                 }
 
-                override fun onResponse(
-                    call: Call<ForecastResponse>,
-                    response: Response<ForecastResponse>
-                ) {
+                override fun onResponse(call: Call<ForecastResponse>, response: Response<ForecastResponse>) {
                     val forecast = response.body()
                     Toast.makeText(
                         applicationContext,
-                        "Weather for ${forecastCallData.location}: ${forecast?.condition}",
-                        Toast.LENGTH_SHORT
+                        "Weather for ${forecastCallData.location}: ${forecast?.condition}, temperature ${forecast?.temp_c}ºC",
+                        Toast.LENGTH_LONG
                     ).show()
-                    Log.i("###ISADORA", "${forecast?.condition}")
+                    Log.i("###ISADORA", "${forecast?.condition}, temperature ${forecast?.temp_c}C")
                 }
             }
         )
     }
+
 
 }
