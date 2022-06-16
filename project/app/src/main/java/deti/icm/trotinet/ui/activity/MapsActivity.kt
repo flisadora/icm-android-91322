@@ -2,27 +2,28 @@ package deti.icm.trotinet.ui.activity
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.tasks.CancellationTokenSource
-import com.google.android.gms.tasks.Task
 import deti.icm.trotinet.R
 import deti.icm.trotinet.databinding.ActivityMapsBinding
+import deti.icm.trotinet.webclient.RetrofitInitializer
+import deti.icm.trotinet.webclient.model.ForecastCall
+import deti.icm.trotinet.webclient.model.ForecastResponse
+import deti.icm.trotinet.webclient.model.Geolocation
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -30,6 +31,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var location = LatLng(40.6434, -8.6406)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +54,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         hideStatusBar()
+        getLocation()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -75,7 +78,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         fusedLocationClient.lastLocation
             .addOnSuccessListener { last ->
-                val location = LatLng(last.latitude, last.longitude)
+                location = LatLng(last.latitude, last.longitude)
                 Log.i("ISADORA", "lat: ${last.latitude}, lon: ${last.longitude}")
                 mMap.addMarker(MarkerOptions().position(location))
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
@@ -107,8 +110,48 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun hideStatusBar() {
         // Hide the status bar.
-        Log.i("ISADORA", "hey sister")
-        WindowInsetsControllerCompat(window, window.decorView)
-            .hide(WindowInsetsCompat.Type.statusBars())
+        supportActionBar?.hide()
+    }
+
+
+    fun getLocation() {
+        var city: String
+        RetrofitInitializer().geolocationService
+        .getGeodata(location.latitude.toString(), location.longitude.toString()).enqueue(
+            object : Callback<Geolocation> {
+                override fun onFailure(call: Call<Geolocation>, t: Throwable) {
+                    Log.i("###ISADORA", "geolocation api call failure")
+                }
+
+                override fun onResponse(call: Call<Geolocation>, response: Response<Geolocation>) {
+                    val geolocation = response.body()
+                    city = geolocation?.city.toString()
+                    getForecast(city)
+                }
+            }
+        )
+    }
+
+
+    fun getForecast(city: String) {
+        val forecastCallData = ForecastCall(city)
+        RetrofitInitializer().weatherService.getWeather(forecastCallData).enqueue(
+            object : Callback<ForecastResponse> {
+
+                override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
+                    Log.i("###ISADORA", "weather api call failure")
+                }
+
+                override fun onResponse(call: Call<ForecastResponse>, response: Response<ForecastResponse>) {
+                    val forecast = response.body()
+                    Toast.makeText(
+                        applicationContext,
+                        "Weather for ${forecastCallData.location}: ${forecast?.condition}, temperature ${forecast?.temp_c}ºC",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    Log.i("###ISADORA", "${forecast?.condition}, temperature ${forecast?.temp_c}C")
+                }
+            }
+        )
     }
 }
