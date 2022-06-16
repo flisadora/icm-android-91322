@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -24,6 +25,8 @@ import deti.icm.trotinet.webclient.model.Geolocation
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+import kotlin.concurrent.schedule
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -32,6 +35,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMapsBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var location = LatLng(40.6434, -8.6406)
+    private lateinit var city: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,40 +58,45 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         hideStatusBar()
-        getLocation()
+        getDeviceLocation()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+    }
 
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
+    private fun getDeviceLocation() {
+        if (ActivityCompat.checkSelfPermission(
+        this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED)
-        {
+            ActivityCompat.checkSelfPermission(
+        this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
             ActivityCompat.requestPermissions(
                 this@MapsActivity,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 requestCodeLocationPermission
             )
-
             return
         }
 
         fusedLocationClient.lastLocation
             .addOnSuccessListener { last ->
                 location = LatLng(last.latitude, last.longitude)
-                Log.i("ISADORA", "lat: ${last.latitude}, lon: ${last.longitude}")
+                Log.i("###ISADORA", "LAST: lat: ${last.latitude}, lon: ${last.longitude}")
                 mMap.addMarker(MarkerOptions().position(location))
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
                 mMap.setMinZoomPreference(16.5F)
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Failed on getting current location",
-                    Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this, "Failed on getting current location",
+                    Toast.LENGTH_LONG
+                ).show()
             }
+        Log.i("###ISADORA", "LOCAL: lat: ${location.latitude}, lon: ${location.longitude}")
+        Timer().schedule(2000) { getLocation() }
 
     }
 
@@ -115,7 +124,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     fun getLocation() {
-        var city: String
         RetrofitInitializer().geolocationService
         .getGeodata(location.latitude.toString(), location.longitude.toString()).enqueue(
             object : Callback<Geolocation> {
@@ -125,7 +133,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 override fun onResponse(call: Call<Geolocation>, response: Response<Geolocation>) {
                     val geolocation = response.body()
-                    city = geolocation?.city.toString()
+                    city = geolocation?.region.toString()
+                    Log.i("###ISADORA", "CITY: $city")
                     getForecast(city)
                 }
             }
@@ -144,11 +153,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 override fun onResponse(call: Call<ForecastResponse>, response: Response<ForecastResponse>) {
                     val forecast = response.body()
-                    Toast.makeText(
+                    val toast: Toast = Toast.makeText(
                         applicationContext,
                         "Weather for ${forecastCallData.location}: ${forecast?.condition}, temperature ${forecast?.temp_c}ºC",
                         Toast.LENGTH_LONG
-                    ).show()
+                    )
+                    toast.setGravity(Gravity.CENTER, 0,0)
+                    toast.show()
                     Log.i("###ISADORA", "${forecast?.condition}, temperature ${forecast?.temp_c}C")
                 }
             }
