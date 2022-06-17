@@ -4,16 +4,21 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/ic_baseline_electric_scooter_24.xml" value="0.239" />
+        <entry key="app/src/main/res/drawable/ic_baseline_emoji_36.xml" value="0.2025" />
         <entry key="app/src/main/res/drawable/ic_electric_scooter_30.xml" value="0.239" />
         <entry key="app/src/main/res/drawable/ic_electric_scooter_36.xml" value="0.239" />
+        <entry key="app/src/main/res/drawable/ic_emoji_36.xml" value="0.2025" />
         <entry key="app/src/main/res/drawable/ic_map_30.xml" value="0.239" />
+        <entry key="app/src/main/res/drawable/ic_out_emoji_36.xml" value="0.2025" />
         <entry key="app/src/main/res/drawable/ic_round_electric_scooter_24.xml" value="0.239" />
         <entry key="app/src/main/res/drawable/ic_round_electric_scooter_32.xml" value="0.239" />
         <entry key="app/src/main/res/layout/activity_dashboard.xml" value="0.23854166666666668" />
         <entry key="app/src/main/res/layout/activity_list_rides.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.1328125" />
+        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_user_details.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.14166666666666666" />
+        <entry key="app/src/main/res/layout/fragment_maps_old.xml" value="0.2515625" />
         <entry key="app/src/main/res/layout/ride_item.xml" value="0.2515625" />
       </map>
     </option>
