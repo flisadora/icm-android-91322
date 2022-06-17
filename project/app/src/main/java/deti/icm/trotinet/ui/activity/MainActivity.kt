@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
                 notifyUser("Successful authentication!")
-                startActivity(Intent(this@MainActivity, UserDetails::class.java))
+                startActivity(Intent(this@MainActivity, MapsActivity::class.java))
             }
         }
 
