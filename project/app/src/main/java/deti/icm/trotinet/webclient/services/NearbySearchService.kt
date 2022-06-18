@@ -1,7 +1,6 @@
 package deti.icm.trotinet.webclient.services
 
-import com.google.android.gms.maps.model.LatLng
-import deti.icm.trotinet.webclient.model.NearbySearch
+import deti.icm.trotinet.webclient.model.nearbySearch.NearbySearch
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

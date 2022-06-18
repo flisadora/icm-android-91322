@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,20 +21,18 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import deti.icm.trotinet.R
 import deti.icm.trotinet.databinding.ActivityMapsBinding
 import deti.icm.trotinet.webclient.RetrofitInitializer
 import deti.icm.trotinet.webclient.model.ForecastCall
 import deti.icm.trotinet.webclient.model.ForecastResponse
 import deti.icm.trotinet.webclient.model.Geolocation
-import deti.icm.trotinet.webclient.model.NearbySearch
+import deti.icm.trotinet.webclient.model.nearbySearch.NearbySearch
 import deti.icm.trotinet.webclient.utility.ConstantsNearbySearch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import kotlin.concurrent.schedule
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -70,8 +69,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         getDeviceLocation()
     }
 
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.isMyLocationEnabled = true
+        mMap.uiSettings.isZoomControlsEnabled = true
     }
 
     private fun getDeviceLocation() {
@@ -94,9 +96,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .addOnSuccessListener { last ->
                 location = LatLng(last.latitude, last.longitude)
                 Log.i("###ISADORA", "LAST: lat: ${last.latitude}, lon: ${last.longitude}")
-                mMap.addMarker(MarkerOptions().position(location))
+                //mMap.addMarker(MarkerOptions().position(location))
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
-                mMap.setMinZoomPreference(15.0F)
+                mMap.setMinZoomPreference(13.0F)
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15.0F))
             }
             .addOnFailureListener {
                 Toast.makeText(
@@ -104,9 +107,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     Toast.LENGTH_LONG
                 ).show()
             }
-        Log.i("###ISADORA", "LOCAL: lat: ${location.latitude}, lon: ${location.longitude}")
+
         callNearbySearch()
-        //Timer().schedule(2000) { getLocation() }
         getLocation()
     }
 
@@ -134,8 +136,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     private fun listenButtons() {
-        val buttonUserDetails = findViewById<FloatingActionButton>(R.id.user_details_button)
-        val buttonListRides = findViewById<FloatingActionButton>(R.id.list_rides_button)
+        val buttonUserDetails = findViewById<Button>(R.id.user_details_button)
+        val buttonListRides = findViewById<Button>(R.id.list_rides_button)
 
         buttonUserDetails.setOnClickListener {
             val intent = Intent(this, UserDetails::class.java)
@@ -162,24 +164,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     response: Response<NearbySearch>
                 ) {
                     val nearbySearch = response.body()
-                    Log.i("###ISADORA", "NEARBY: ${response.code()}")
+
                     if (nearbySearch?.status.equals("OK")) {
                         val places = ArrayList<LatLng>()
 
                         for (item in nearbySearch?.results!!) {
                             val place = LatLng(item.geometry.location?.lat, item.geometry.location?.lng)
                             places.add(place)
-                            mMap.addMarker(MarkerOptions().position(location)
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
+                            mMap.addMarker(MarkerOptions().position(place)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.electric_marker))
+                            )
                         }
-
+                        mMap.animateCamera(CameraUpdateFactory.newLatLng(location))
                     }
                 }
 
                 override fun onFailure(call: Call<NearbySearch>, t: Throwable) {
                     Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_LONG)
                 }
-
             }
         )
     }
@@ -239,4 +241,5 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Documentation: https://github.com/bumptech/glide
         Glide.with(this).load(iconUri).into(weatherIcon)
     }
+
 }
