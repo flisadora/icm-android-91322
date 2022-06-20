@@ -1,6 +1,7 @@
 package deti.icm.trotinet.ui.activity
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -15,12 +16,15 @@ import com.bumptech.glide.Glide
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import deti.icm.trotinet.R
+import deti.icm.trotinet.database.AppDatabase
 import deti.icm.trotinet.databinding.ActivityMapsBinding
+import deti.icm.trotinet.model.Scooter
 import deti.icm.trotinet.webclient.RetrofitInitializer
 import deti.icm.trotinet.webclient.model.ForecastCall
 import deti.icm.trotinet.webclient.model.ForecastResponse
@@ -31,9 +35,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+
+    private val repository by lazy {
+        AppDatabase.instance(this).appDao()
+    }
 
     private val requestCodeLocationPermission = 1
     private lateinit var mMap: GoogleMap
@@ -70,6 +79,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        if (ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this@MapsActivity,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                requestCodeLocationPermission
+            )
+            return
+        }
         mMap.isMyLocationEnabled = true
         mMap.uiSettings.isZoomControlsEnabled = true
     }
@@ -148,7 +171,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         buttonQrCode.setOnClickListener {
-            //val intent = Intent(this, QrScanner::class.java)
+            val intent = Intent(this, QrScanner::class.java)
             startActivity(intent)
         }
     }
@@ -156,6 +179,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun callNearbySearch() {
         val places = ArrayList<LatLng>()
+        repository.deleteAllScooters()
+
         RetrofitInitializer().nearbySearchService
         .getNearbySearch(("${location.latitude},${location.longitude}"),
                         ConstantsNearbySearch.TYPE,
@@ -174,7 +199,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         for (item in nearbySearch?.results!!) {
                             val place = LatLng(item.geometry.location?.lat, item.geometry.location?.lng)
                             places.add(place)
+                            val scooter = Scooter(0L, true, ThreadLocalRandom.current().nextInt(30,100), place.latitude, place.longitude)
+                            repository.addScooter(scooter)
                             mMap.addMarker(MarkerOptions().position(place)
+                                .title("Battery level: ${scooter.batteryLevel}%")
+                                .snippet("Available")
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.electric_marker))
                             )
                         }

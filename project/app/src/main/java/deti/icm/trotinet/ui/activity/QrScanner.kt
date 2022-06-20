@@ -18,7 +18,7 @@ import deti.icm.trotinet.R
 import java.io.IOException
 import deti.icm.trotinet.databinding.ActivityQrScannerBinding
 
-class QrScanner : AppCompatActivity() {
+class   QrScanner : AppCompatActivity() {
     private val requestCodeCameraPermission = 1001
     private lateinit var cameraSource: CameraSource
     private lateinit var barcodeDetector: BarcodeDetector
@@ -97,7 +97,6 @@ class QrScanner : AppCompatActivity() {
                 val barcodes = detections.detectedItems
                 if (barcodes.size() == 1) {
                     scannedValue = barcodes.valueAt(0).rawValue
-
 
                     //Don't forget to add this line printing value or finishing activity must run on main thread
                     runOnUiThread {

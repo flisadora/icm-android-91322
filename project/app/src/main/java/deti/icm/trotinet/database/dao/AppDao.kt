@@ -2,6 +2,7 @@ package deti.icm.trotinet.database.dao
 
 import androidx.room.*
 import deti.icm.trotinet.model.Ride
+import deti.icm.trotinet.model.Scooter
 import deti.icm.trotinet.model.User
 import deti.icm.trotinet.model.UserRides
 
@@ -50,4 +51,14 @@ interface AppDao {
     @Transaction
     @Query("SELECT * FROM User")
     fun getUserRides(): List<UserRides>
+
+    // ***** SCOOTER Database *****
+    @Query("SELECT * FROM Scooter ORDER BY Scooter.batteryLevel DESC")
+    fun getAllScooters(): List<Scooter>
+
+    @Insert
+    fun addScooter(scooter: Scooter)
+
+    @Query("DELETE FROM Scooter")
+    fun deleteAllScooters()
 }

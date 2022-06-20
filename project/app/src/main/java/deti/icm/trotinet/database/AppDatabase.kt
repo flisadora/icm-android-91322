@@ -8,9 +8,10 @@ import androidx.room.TypeConverters
 import deti.icm.trotinet.database.converter.Converters
 import deti.icm.trotinet.database.dao.AppDao
 import deti.icm.trotinet.model.Ride
+import deti.icm.trotinet.model.Scooter
 import deti.icm.trotinet.model.User
 
-@Database(entities = [User::class, Ride::class], version = 1, exportSchema = false)
+@Database(entities = [User::class, Ride::class, Scooter::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun appDao(): AppDao
