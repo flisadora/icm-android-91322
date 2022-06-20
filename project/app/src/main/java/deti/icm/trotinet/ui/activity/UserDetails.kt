@@ -40,7 +40,8 @@ class UserDetails : AppCompatActivity(R.layout.activity_user_details) {
 
     private fun showUserDetails() {
         val user = repository.getAllUsers()[0]
-        //repository.addRide(Ride(0L, user.uid, 2800.0, 2.34,"Estação de Aveiro", "Universidade de Aveiro, 3810-193 Aveiro", LocalDateTime.now()))
+        //repository.addRide(Ride(0L, user.uid, 2800.0, 3.25,"Estação de Aveiro", "Universidade de Aveiro, 3810-193 Aveiro", LocalDateTime.now()))
+        //repository.addRide(Ride(0L, user.uid, 2100.0, 2.5,"Universidade de Aveiro, 3810-193 Aveiro", "Fórum de Aveiro, 3810-193 Aveiro", LocalDateTime.now()))
         val userRides = repository.loadUserRides(user.uid)
         val distance = userRides.sumOf { it.distance }
 
