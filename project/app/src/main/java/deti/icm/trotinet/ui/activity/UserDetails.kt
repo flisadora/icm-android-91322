@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import deti.icm.trotinet.R
 import deti.icm.trotinet.database.AppDatabase
+import deti.icm.trotinet.model.Ride
 import deti.icm.trotinet.webclient.model.ForecastCall
 import deti.icm.trotinet.model.User
 import deti.icm.trotinet.webclient.RetrofitInitializer
@@ -16,6 +17,7 @@ import deti.icm.trotinet.webclient.model.Geolocation
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDateTime
 
 class UserDetails : AppCompatActivity(R.layout.activity_user_details) {
 
@@ -27,18 +29,18 @@ class UserDetails : AppCompatActivity(R.layout.activity_user_details) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_details)
-
+        //repository.addUser(User(0L, "Doug", "dougfanny@email.com", 14.7))
     }
 
 
     override fun onResume() {
         super.onResume()
-
         showUserDetails()
     }
 
     private fun showUserDetails() {
         val user = repository.getAllUsers()[0]
+        //repository.addRide(Ride(0L, user.uid, 2800.0, 2.34,"Estação de Aveiro", "Universidade de Aveiro, 3810-193 Aveiro", LocalDateTime.now()))
         val userRides = repository.loadUserRides(user.uid)
         val distance = userRides.sumOf { it.distance }
 

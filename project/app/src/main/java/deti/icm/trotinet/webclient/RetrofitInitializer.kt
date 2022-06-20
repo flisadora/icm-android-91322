@@ -1,6 +1,7 @@
 package deti.icm.trotinet.webclient
 
 import deti.icm.trotinet.webclient.services.GeolocationService
+import deti.icm.trotinet.webclient.services.NearbySearchService
 import deti.icm.trotinet.webclient.services.WeatherService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,7 +16,7 @@ class RetrofitInitializer {
     // API -> https://m3o.com/weather/api
     private val retrofitForecast: Retrofit = Retrofit.Builder()
         .baseUrl("https://api.m3o.com/v1/weather/")
-        .client(client)
+        //.client(client)
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
 
@@ -25,10 +26,20 @@ class RetrofitInitializer {
     // API -> https://www.geodatasource.com/web-service/location-search
     private val retrofitGeolocation: Retrofit = Retrofit.Builder()
         .baseUrl("https://api.geodatasource.com/v2/")
-        .client(client)
+        //.client(client)
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
 
     val geolocationService = retrofitGeolocation.create(GeolocationService::class.java)
+
+
+    // API -> https://developers.google.com/maps/documentation/places/web-service/search-nearby
+    private val retrofitPlaces: Retrofit = Retrofit.Builder()
+        .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
+        .client(client)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .build()
+
+    val nearbySearchService = retrofitPlaces.create(NearbySearchService::class.java)
 
 }

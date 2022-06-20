@@ -1,32 +1,37 @@
 package deti.icm.trotinet.ui.activity
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.bumptech.glide.Glide
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import deti.icm.trotinet.R
 import deti.icm.trotinet.databinding.ActivityMapsBinding
 import deti.icm.trotinet.webclient.RetrofitInitializer
 import deti.icm.trotinet.webclient.model.ForecastCall
 import deti.icm.trotinet.webclient.model.ForecastResponse
 import deti.icm.trotinet.webclient.model.Geolocation
+import deti.icm.trotinet.webclient.model.nearbySearch.NearbySearch
+import deti.icm.trotinet.webclient.utility.ConstantsNearbySearch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import kotlin.concurrent.schedule
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -43,6 +48,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        listenButtons()
 
         // Initialize the FusedLocationClient.
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this@MapsActivity)
@@ -61,8 +67,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         getDeviceLocation()
     }
 
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.isMyLocationEnabled = true
+        mMap.uiSettings.isZoomControlsEnabled = true
     }
 
     private fun getDeviceLocation() {
@@ -85,9 +94,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .addOnSuccessListener { last ->
                 location = LatLng(last.latitude, last.longitude)
                 Log.i("###ISADORA", "LAST: lat: ${last.latitude}, lon: ${last.longitude}")
-                mMap.addMarker(MarkerOptions().position(location))
+                //mMap.addMarker(MarkerOptions().position(location))
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
-                mMap.setMinZoomPreference(16.5F)
+                mMap.setMinZoomPreference(15.0F)
             }
             .addOnFailureListener {
                 Toast.makeText(
@@ -95,9 +104,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     Toast.LENGTH_LONG
                 ).show()
             }
-        Log.i("###ISADORA", "LOCAL: lat: ${location.latitude}, lon: ${location.longitude}")
-        Timer().schedule(2000) { getLocation() }
 
+        callNearbySearch()
+        getLocation()
     }
 
 
@@ -123,7 +132,65 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    fun getLocation() {
+    private fun listenButtons() {
+        val buttonUserDetails = findViewById<FloatingActionButton>(R.id.user_details_button)
+        val buttonListRides = findViewById<FloatingActionButton>(R.id.list_rides_button)
+        val buttonQrCode = findViewById<FloatingActionButton>(R.id.qrcode_button)
+
+        buttonUserDetails.setOnClickListener {
+            val intent = Intent(this, UserDetails::class.java)
+            startActivity(intent)
+        }
+
+        buttonListRides.setOnClickListener {
+            val intent = Intent(this, ListRides::class.java)
+            startActivity(intent)
+        }
+
+        buttonQrCode.setOnClickListener {
+            //val intent = Intent(this, QrScanner::class.java)
+            startActivity(intent)
+        }
+    }
+
+
+    private fun callNearbySearch() {
+        val places = ArrayList<LatLng>()
+        RetrofitInitializer().nearbySearchService
+        .getNearbySearch(("${location.latitude},${location.longitude}"),
+                        ConstantsNearbySearch.TYPE,
+                        ConstantsNearbySearch.RADIUS,
+                        ConstantsNearbySearch.API_KEY
+        ).enqueue(
+            object : Callback<NearbySearch> {
+                override fun onResponse(
+                    call: Call<NearbySearch>,
+                    response: Response<NearbySearch>
+                ) {
+                    val nearbySearch = response.body()
+
+                    if (nearbySearch?.status.equals("OK")) {
+
+                        for (item in nearbySearch?.results!!) {
+                            val place = LatLng(item.geometry.location?.lat, item.geometry.location?.lng)
+                            places.add(place)
+                            mMap.addMarker(MarkerOptions().position(place)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.electric_marker))
+                            )
+                        }
+                        mMap.animateCamera(CameraUpdateFactory.newLatLng(location))
+                    }
+                }
+
+                override fun onFailure(call: Call<NearbySearch>, t: Throwable) {
+                    Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_LONG)
+                }
+            }
+        )
+    }
+
+
+    private fun getLocation() {
         RetrofitInitializer().geolocationService
         .getGeodata(location.latitude.toString(), location.longitude.toString()).enqueue(
             object : Callback<Geolocation> {
@@ -142,7 +209,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    fun getForecast(city: String) {
+    private fun getForecast(city: String) {
         val forecastCallData = ForecastCall(city)
         RetrofitInitializer().weatherService.getWeather(forecastCallData).enqueue(
             object : Callback<ForecastResponse> {
@@ -161,8 +228,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     toast.setGravity(Gravity.CENTER, 0,0)
                     toast.show()
                     Log.i("###ISADORA", "${forecast?.condition}, temperature ${forecast?.temp_c}C")
+
+                    setWeatherIcon(forecast?.icon_url)
+
                 }
             }
         )
     }
+
+    private fun setWeatherIcon(iconUrl: String?) {
+        val weatherIcon = findViewById<ImageView>(R.id.weather_icon)
+        var iconUri = ""
+        iconUrl?.let { iconUri = "http:"+it }
+
+        // Documentation: https://github.com/bumptech/glide
+        Glide.with(this).load(iconUri).into(weatherIcon)
+    }
+
 }
