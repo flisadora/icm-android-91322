@@ -1,22 +1,18 @@
 package deti.icm.trotinet.ui.activity
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.bumptech.glide.Glide
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -95,6 +91,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         mMap.isMyLocationEnabled = true
         mMap.uiSettings.isZoomControlsEnabled = true
+
+        val locationButton = (this.findViewById<View>(Integer.parseInt("1")).parent as View).findViewById<View>(Integer.parseInt("2"))
+        val relativeLayoutParams = locationButton.layoutParams as (RelativeLayout.LayoutParams)
+        // position on right bottom
+        relativeLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,0)
+        relativeLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE)
+        relativeLayoutParams.setMargins(0,0,0,320)
+
     }
 
     private fun getDeviceLocation() {
@@ -249,14 +253,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 override fun onResponse(call: Call<ForecastResponse>, response: Response<ForecastResponse>) {
                     val forecast = response.body()
-                    val toast: Toast = Toast.makeText(
-                        applicationContext,
-                        "Weather for ${forecastCallData.location}: ${forecast?.condition}, temperature ${forecast?.temp_c}ºC",
-                        Toast.LENGTH_LONG
-                    )
-                    toast.setGravity(Gravity.CENTER, 0,0)
-                    toast.show()
-                    Log.i("###ISADORA", "${forecast?.condition}, temperature ${forecast?.temp_c}C")
+
+                    val forecast_description = findViewById<TextView>(R.id.weather_description)
+                    forecast_description.text = "${forecast?.condition}: ${forecast?.temp_c}ºC"
 
                     setWeatherIcon(forecast?.icon_url)
 
