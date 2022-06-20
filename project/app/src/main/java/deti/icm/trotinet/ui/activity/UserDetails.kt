@@ -14,6 +14,7 @@ import deti.icm.trotinet.model.User
 import deti.icm.trotinet.webclient.RetrofitInitializer
 import deti.icm.trotinet.webclient.model.ForecastResponse
 import deti.icm.trotinet.webclient.model.Geolocation
+import okhttp3.internal.format
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -52,7 +53,7 @@ class UserDetails : AppCompatActivity(R.layout.activity_user_details) {
         val text_input_email = findViewById<TextView>(R.id.user_details_email)
         val button_save = findViewById<Button>(R.id.user_details_save)
 
-        text_view_balance.text = user.balance.toString() + "€"
+        text_view_balance.text = format("%.2f", user.balance).toString() + "€"
         text_view_distance.text = (distance / 1000).toString() + " km"
         text_view_rides.text = userRides.size.toString() + " rides"
         text_input_name.text = user.name

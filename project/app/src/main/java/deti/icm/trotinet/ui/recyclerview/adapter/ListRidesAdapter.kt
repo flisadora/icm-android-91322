@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import deti.icm.trotinet.R
 import deti.icm.trotinet.model.Ride
+import okhttp3.internal.format
+import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -25,7 +27,7 @@ class ListRidesAdapter(
             val date = itemView.findViewById<TextView>(R.id.ride_date)
             date.text = ride.date?.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)).toString()
             val cost = itemView.findViewById<TextView>(R.id.ride_cost)
-            cost.text = ride.cost.toString() + " €"
+            cost.text = format("%.2f", ride.cost).toString() + " €"
         }
     }
 
