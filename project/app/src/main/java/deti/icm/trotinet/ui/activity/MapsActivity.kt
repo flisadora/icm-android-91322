@@ -18,6 +18,7 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import deti.icm.trotinet.R
 import deti.icm.trotinet.databinding.ActivityMapsBinding
 import deti.icm.trotinet.webclient.RetrofitInitializer
@@ -132,8 +133,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     private fun listenButtons() {
-        val buttonUserDetails = findViewById<Button>(R.id.user_details_button)
-        val buttonListRides = findViewById<Button>(R.id.list_rides_button)
+        val buttonUserDetails = findViewById<FloatingActionButton>(R.id.user_details_button)
+        val buttonListRides = findViewById<FloatingActionButton>(R.id.list_rides_button)
+        val buttonQrCode = findViewById<FloatingActionButton>(R.id.qrcode_button)
 
         buttonUserDetails.setOnClickListener {
             val intent = Intent(this, UserDetails::class.java)
@@ -142,6 +144,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         buttonListRides.setOnClickListener {
             val intent = Intent(this, ListRides::class.java)
+            startActivity(intent)
+        }
+
+        buttonQrCode.setOnClickListener {
+            //val intent = Intent(this, QrScanner::class.java)
             startActivity(intent)
         }
     }
