@@ -2,30 +2,19 @@ package deti.icm.trotinet.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import deti.icm.trotinet.R
 import deti.icm.trotinet.database.AppDatabase
-import deti.icm.trotinet.model.Ride
-import deti.icm.trotinet.webclient.model.ForecastCall
 import deti.icm.trotinet.model.User
-import deti.icm.trotinet.webclient.RetrofitInitializer
-import deti.icm.trotinet.webclient.model.ForecastResponse
-import deti.icm.trotinet.webclient.model.Geolocation
 import okhttp3.internal.format
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.time.LocalDateTime
 
 class UserDetails : AppCompatActivity(R.layout.activity_user_details) {
 
     private val repository by lazy {
         AppDatabase.instance(this).appDao()
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,11 +56,7 @@ class UserDetails : AppCompatActivity(R.layout.activity_user_details) {
                 user.balance,
             )
             repository.updateUser(editedUser)
-            Toast.makeText(
-                applicationContext,
-                "Your new information was saved!",
-                Toast.LENGTH_LONG
-            ).show()
+            Snackbar.make(it, "Your new information was saved!", Snackbar.LENGTH_LONG).show()
         }
     }
 
