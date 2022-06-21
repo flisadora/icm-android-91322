@@ -17,6 +17,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import deti.icm.trotinet.R
 import deti.icm.trotinet.database.AppDatabase
 import deti.icm.trotinet.databinding.ActivityMapsBinding
@@ -63,6 +65,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+
+        //FirebaseApp.initializeApp(this)
+        val firestore = Firebase.firestore
+        firestore.collection("User").get().addOnSuccessListener {
+            it?.let { snapshot ->
+                Log.i("###ISADORA", "FIREBASE: ${snapshot.documents}")
+            }
+        }
     }
 
 

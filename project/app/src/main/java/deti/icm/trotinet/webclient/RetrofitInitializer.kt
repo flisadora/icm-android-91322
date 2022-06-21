@@ -36,7 +36,7 @@ class RetrofitInitializer {
     // API -> https://developers.google.com/maps/documentation/places/web-service/search-nearby
     private val retrofitPlaces: Retrofit = Retrofit.Builder()
         .baseUrl("https://maps.googleapis.com/maps/api/place/nearbysearch/")
-        .client(client)
+        //.client(client)
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
 
