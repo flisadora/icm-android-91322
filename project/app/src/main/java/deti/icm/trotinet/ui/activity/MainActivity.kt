@@ -17,6 +17,9 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import deti.icm.trotinet.R
 import deti.icm.trotinet.database.AppDatabase
+import deti.icm.trotinet.model.Ride
+import deti.icm.trotinet.model.User
+import java.time.LocalDateTime
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,10 +49,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val db = AppDatabase.instance(this)
-        val appDao = db.appDao()
-        Log.d("ISADORA", "on create")
-
+        repositoryInit()
         checkBiometricSupport()
 
         val auth_button = findViewById<Button>(R.id.auth_button)
@@ -93,5 +93,21 @@ class MainActivity : AppCompatActivity() {
         } else true
     }
 
+    private fun repositoryInit() {
+        val repository = AppDatabase.instance(this).appDao()
+        if(repository.getAllUsers().isEmpty()) {
+            repository.addUser(User(0L, "Charles Xavier", "xmen@ymail.com", 14.7))
+            val user = repository.getAllUsers()[0]
+            Log.i("REPO:", "${repository.getAllRides().isEmpty()}")
+            Log.i("REPO:", "${repository.getAllRides()}")
+            if (repository.getAllRides().isEmpty()) {
+                repository.addRide(Ride(0L, user.uid, 2500.0, 3.25,"Estação de Aveiro", "Universidade de Aveiro, 3810-193 Aveiro", LocalDateTime.now()))
+                repository.addRide(Ride(0L, user.uid, 2100.0, 2.5,"Universidade de Aveiro, 3810-193 Aveiro", "Forum Aveiro, 3810-064 Aveiro", LocalDateTime.now()))
+                repository.addRide(Ride(0L, user.uid,1100.0, 2.25,"Forum Aveiro, 3810-064 Aveiro", "Salinas de Aveiro, 3800-180 Aveiro", LocalDateTime.now()))
+                repository.addRide(Ride(0L, user.uid,3400.0, 4.75,"Salinas de Aveiro, 3800-180 Aveiro", "Loja do Cidadão de Aveiro, 3800-990 Aveiro", LocalDateTime.now()))
+                Log.i("REPO:", "${repository.loadUserRides(user.uid)}")
+            }
+        }
+    }
 
 }

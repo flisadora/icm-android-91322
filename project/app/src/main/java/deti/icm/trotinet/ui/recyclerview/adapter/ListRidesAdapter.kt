@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import deti.icm.trotinet.R
 import deti.icm.trotinet.model.Ride
 import okhttp3.internal.format
-import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 

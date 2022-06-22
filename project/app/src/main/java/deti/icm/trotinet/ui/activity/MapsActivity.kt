@@ -35,7 +35,6 @@ import retrofit2.Response
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
-
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val repository by lazy {
@@ -264,8 +263,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 override fun onResponse(call: Call<ForecastResponse>, response: Response<ForecastResponse>) {
                     val forecast = response.body()
 
-                    val forecast_description = findViewById<TextView>(R.id.weather_description)
-                    forecast_description.text = "${forecast?.condition}: ${forecast?.temp_c}ºC"
+                    val forecastDescription = findViewById<TextView>(R.id.weather_description)
+                    forecastDescription.text = "${forecast?.condition}: ${forecast?.temp_c}ºC"
 
                     setWeatherIcon(forecast?.icon_url)
 

@@ -33,7 +33,7 @@
             android:value="AIzaSyAlbEKTNIZBg-mEFOsRyvEwaelHHU2mZS0" />
 
         <activity
-            android:name=".ui.activity.MainActivity" />
+            android:name=".ui.activity.MapsActivity" />
         <activity
             android:name=".ui.activity.ListRides" />
         <activity
@@ -41,7 +41,7 @@
         <activity
             android:name=".ui.activity.UserDetails" />
         <activity
-            android:name=".ui.activity.MapsActivity"
+            android:name=".ui.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

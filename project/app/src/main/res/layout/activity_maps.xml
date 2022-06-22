@@ -57,7 +57,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:alpha="0.85">
+        android:alpha="0.99">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -78,7 +78,8 @@
                 android:layout_marginStart="12dp"
                 android:layout_toEndOf="@+id/weather_icon"
                 android:layout_centerInParent="true"
-                android:textSize="12sp"/>
+                android:textSize="12sp"
+                android:textColor="@color/black"/>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 

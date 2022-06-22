@@ -19,10 +19,9 @@ class ListRides : AppCompatActivity(R.layout.activity_list_rides) {
 
     override fun onResume() {
         super.onResume()
-        val db = AppDatabase.instance(this)
-        val appDao = db.appDao()
-        val users = appDao.getAllUsers()
-        val rides = appDao.loadUserRides(users[0].uid)
+        val repository = AppDatabase.instance(this).appDao()
+        val users = repository.getAllUsers()
+        val rides = repository.loadUserRides(users[0].uid)
         val recyclerView = findViewById<RecyclerView>(R.id.activity_list_rides_recyclerView)
         recyclerView.adapter = ListRidesAdapter(this, rides)
         adapter.refresh(rides)
