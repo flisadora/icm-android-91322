@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "731891029561",
+    "project_id": "trotinet-icm",
+    "storage_bucket": "trotinet-icm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731891029561:android:9bc352d487edc1efb31fe8",
+        "android_client_info": {
+          "package_name": "deti.icm.trotinet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "731891029561-3rne26427iac2fbtlpanfc41ff54qpoa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDv9ZWSqG-SriuimCEvuL0pSIXXXcGvXRk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "731891029561-3rne26427iac2fbtlpanfc41ff54qpoa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
