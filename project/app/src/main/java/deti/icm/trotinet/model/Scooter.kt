@@ -1,14 +1,17 @@
 package deti.icm.trotinet.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity
-data class Scooter (
-    @PrimaryKey(autoGenerate = true)
-    val sid: Long = 0L,
-    val available: Boolean,
-    val batteryLevel: Int,
-    val latitude: Double,
-    val longitude: Double
-)
+class Scooter (
+    val id: String? = null,
+    val available: Boolean = true,
+    val batteryLevel: Int = 0,
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0
+) {
+    fun toScooter(id: String): Scooter = Scooter(
+        id = id,
+        available = available,
+        batteryLevel = batteryLevel,
+        latitude = latitude,
+        longitude = longitude
+    )
+}

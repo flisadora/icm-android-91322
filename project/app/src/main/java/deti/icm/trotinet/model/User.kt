@@ -1,13 +1,15 @@
 package deti.icm.trotinet.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity
-data class User (
-    @PrimaryKey(autoGenerate = true)
-    val uid: Long = 0L,
-    val name: String,
-    val email: String,
-    val balance: Double,
-)
+class User (
+    val id: String? = null,
+    val name: String = "",
+    val email: String = "",
+    val balance: Double = 0.0
+) {
+    fun toUser(id: String): User = User(
+        id = id,
+        name = name,
+        email = email,
+        balance = balance
+    )
+}

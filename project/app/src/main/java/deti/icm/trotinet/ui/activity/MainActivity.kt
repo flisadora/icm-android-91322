@@ -16,7 +16,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import deti.icm.trotinet.R
-import deti.icm.trotinet.database.AppDatabase
 
 class MainActivity : AppCompatActivity() {
 
@@ -45,10 +44,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val db = AppDatabase.instance(this)
-        val appDao = db.appDao()
-        Log.d("ISADORA", "on create")
 
         checkBiometricSupport()
 

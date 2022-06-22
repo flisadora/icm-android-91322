@@ -20,7 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import deti.icm.trotinet.R
-import deti.icm.trotinet.database.AppDatabase
+import deti.icm.trotinet.database.Repository
 import deti.icm.trotinet.databinding.ActivityMapsBinding
 import deti.icm.trotinet.model.Scooter
 import deti.icm.trotinet.webclient.RetrofitInitializer
@@ -34,14 +34,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
+import kotlin.concurrent.schedule
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private val repository by lazy {
-        AppDatabase.instance(this).appDao()
-    }
-
+    private val repository: Repository = Repository(Firebase.firestore)
+    private val userId: String = "wJ3dox6MDHBYoLlEXdqO"
     private val requestCodeLocationPermission = 1
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
@@ -65,14 +64,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-
-        //FirebaseApp.initializeApp(this)
-        val firestore = Firebase.firestore
-        firestore.collection("User").get().addOnSuccessListener {
-            it?.let { snapshot ->
-                Log.i("###ISADORA", "FIREBASE: ${snapshot.documents}")
-            }
-        }
     }
 
 
@@ -193,7 +184,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun callNearbySearch() {
         val places = ArrayList<LatLng>()
-        repository.deleteAllScooters()
+        repository.getScooters()?.let { repository.deleteScooters(it) }
 
         RetrofitInitializer().nearbySearchService
         .getNearbySearch(("${location.latitude},${location.longitude}"),
@@ -212,15 +203,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                         for (item in nearbySearch?.results!!) {
                             val place = LatLng(item.geometry.location?.lat, item.geometry.location?.lng)
+                            Log.i("#PLACE", "$place")
                             places.add(place)
-                            val scooter = Scooter(0L, true, ThreadLocalRandom.current().nextInt(30,100), place.latitude, place.longitude)
-                            repository.addScooter(scooter)
+                            val scooter = Scooter("", true, ThreadLocalRandom.current().nextInt(30,100), place.latitude, place.longitude)
+                            repository.insertScooter(scooter)
                             mMap.addMarker(MarkerOptions().position(place)
                                 .title("Battery level: ${scooter.batteryLevel}%")
                                 .snippet("Available")
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.electric_marker))
                             )
                         }
+
                         mMap.animateCamera(CameraUpdateFactory.newLatLng(location))
                     }
                 }
